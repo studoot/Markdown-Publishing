@@ -1,0 +1,20 @@
+from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes
+
+to: html5
+standalone: true
+# self-contained: true
+template: easy_template.html
+toc: true
+filters:
+- diagram-generator.lua
+variables:
+  header-includes: |
+      <style>
+        body {
+          font-family: "RR Pioneer",Calibri,"Lucida Sans",Arial,sans-serif;
+        }
+        code {
+          font-family: "JetBrains Mono","Fira Code","Consolas","Courier New",Courier,monospace;
+          font-size: 75%;
+        }
+      </style>

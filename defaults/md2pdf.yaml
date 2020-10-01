@@ -1,0 +1,36 @@
+from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes+raw_tex
+
+pdf-engine: xelatex
+standalone: true
+number-sections: true
+template: eisvogel.tex
+
+listings: true
+
+filters:
+  - diagram-generator.lua
+  - fix-defn-lists.lua
+  
+variables:
+  mainfont: "RR Pioneer"
+  sansfont: "RR Pioneer"
+  monofont: "JetBrains Mono"
+  linkcolor: "[rgb]{0.06,0.02,0.62}" # 10069F - rolls-royce-blue
+  urlcolor: "[rgb]{0.06,0.02,0.62}" # 10069F - rolls-royce-blue
+  toc: "true"
+  toc-own-page: "true"
+  titlepage: "true"
+  titlepage-text-color: "10069F" # rolls-royce-blue
+  titlepage-rule-color: "10069F" # rolls-royce-blue
+  logo: "RR.png"
+  logo-width: "30"
+  code-block-font-size: "\\footnotesize"
+  lang: "en-GB"
+  linestretch: "1.1"
+  geometry:
+    - a4paper
+    - text={16.5cm,23cm}
+    - centering
+  header-includes: |
+    \usepackage{enumitem}
+    \setlist[description]{style=nextline}
