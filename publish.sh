@@ -62,7 +62,9 @@ done
 [ -n "$DO_QUICK_HTML" ] && { DO_HTML=YES; } || { SELF_CONTAINED=--self-contained; }
 
 for file in "$@"; do
+    DATE=--variable=date:$(git log -1 --date=short --format=%cd 2>/dev/null)
+    COMMIT=--variable=commit:$(git rev-parse --short HEAD)
     THIS_OUTPUT=${OUTPUT:-${file%%.*}}
-    [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf -o "${THIS_OUTPUT}.pdf"
-    [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html"
+    [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf -o "${THIS_OUTPUT}.pdf" "${DATE}" "${COMMIT}"
+    [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${COMMIT}"
 done
