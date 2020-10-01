@@ -880,6 +880,11 @@ $endif$
 \par
 \noindent
 
+$if(logo)$
+\noindent
+\includegraphics[width=$if(logo-width)$$logo-width$$else$100$endif$pt, left]{$logo$}
+$endif$
+
 $if(titlepage-background)$
 % The titlepage with a background image has other text spacing and text size
 {
@@ -892,7 +897,7 @@ $if(titlepage-background)$
   {\Large \textsf{$subtitle$}}
   $endif$
   \vskip 2em
-  \noindent {\Large \textsf{$for(author)$$author$$sep$, $endfor$} \vskip 0.6em \textsf{$date$}}
+  \noindent {\Large \textsf{$for(author)$$author$$sep$, $endfor$}}
   \vfill
 }
 $else$
@@ -910,14 +915,10 @@ $else$
 }
 $endif$
 
-$if(logo)$
-\noindent
-\includegraphics[width=$if(logo-width)$$logo-width$$else$100$endif$pt, left]{$logo$}
-$endif$
-
 $if(titlepage-background)$
 $else$
-\textsf{$date$}
+$if(issue)$Issue $issue$$if(commit)${\tiny \\[-1.25em] (ID: $commit$)}$endif$\vskip 0pt$else$$endif$
+\textsf{$if(pubdate)$$pubdate$$else$$date$$endif$}
 $endif$
 \end{flushleft}
 \end{titlepage}
