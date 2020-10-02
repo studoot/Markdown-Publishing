@@ -55,15 +55,17 @@ while true; do
     esac
     shift
 done
-[ $# -eq 0 ] && { printf "%s: No Markdown document supplied\n" "$0"; usage; exit 1; }
-[ -n "$OUTPUT" ] && [ $# -gt 1 ] && { printf -- "%s: --output can only be used when 1 Markdown file is supplied\n" "$0"; usage; exit 1; }
+[ $# -eq 0 ] && { printf "%s: No Markdown file(s) supplied\n" "$0"; usage; exit 1; }
+[ -n "$OUTPUT" ] && [ $# -gt 1 ] && { printf "%s: --output can only be used when 1 Markdown file is supplied\n" "$0"; usage; exit 1; }
 [ -n "$DO_ALL" ] && { DO_HTML=YES; DO_PDF=YES; }
 # shellcheck disable=SC2015
 [ -n "$DO_QUICK_HTML" ] && { DO_HTML=YES; } || { SELF_CONTAINED=--self-contained; }
 
 for file in "$@"; do
-    DATE=--variable=date:$(git log -1 --date=short --format=%cd 2>/dev/null)
-    COMMIT=--variable=commit:$(git rev-parse --short HEAD)
+    [ -f "$file" ] || { printf "%s: Argument %s is not a valid file path\n" "$0" "$file"; continue; }
+    docdir=$(dirname "$file")
+    DATE=--variable=date:$(git -C "$docdir" log -1 --date=short --format=%cd 2>/dev/null) || DATE=$(date -Idate)
+    COMMIT=--variable=commit:$(git -C "$docdir" rev-parse --short HEAD 2>/dev/null) || COMMIT=
     THIS_OUTPUT=${OUTPUT:-${file%%.*}}
     [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf -o "${THIS_OUTPUT}.pdf" "${DATE}" "${COMMIT}"
     [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${COMMIT}"
