@@ -8,14 +8,18 @@ usage() {
         The following options are allowed:
         -h|--html           Make HTML
         -p|--pdf            Make PDF
+        -t|--tex            Make TeX source code
         -q|--quick-html     Don't make self-contained HTML
         -o|--output         Specify output file's basename - an extension will be added
-        -h|--help           Display this message
+        --help              Display this message
+
+    By default, HTML and PDF output is produced. Selecting any of the output
+    options (--html, --pdf or --tex) disables this default. 
 EOT
     exit 1
 }
 
-OPTIONS=$(getopt -n "$0" -o hpqo:h --long html,pdf,quick-html,output:,help -- "$@")
+OPTIONS=$(getopt -n "$0" -o hptqo:h --long html,pdf,tex,quick-html,output:,help -- "$@")
 # shellcheck disable=SC2181
 [[ $? -ne 0 ]] && usage
 
@@ -33,6 +37,10 @@ while true; do
             ;;
         -p | --pdf)
             DO_PDF=YES
+            DO_ALL=
+            ;;
+        -t | --tex)
+            DO_TEX=YES
             DO_ALL=
             ;;
         -o | --output)
@@ -68,5 +76,6 @@ for file in "$@"; do
     COMMIT=--variable=commit:$(git -C "$docdir" rev-parse --short HEAD 2>/dev/null) || COMMIT=
     THIS_OUTPUT=${OUTPUT:-${file%%.*}}
     [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf -o "${THIS_OUTPUT}.pdf" "${DATE}" "${COMMIT}"
+    [ -n "$DO_TEX" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf -o "${THIS_OUTPUT}.tex" "${DATE}" "${COMMIT}"
     [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${COMMIT}"
 done
