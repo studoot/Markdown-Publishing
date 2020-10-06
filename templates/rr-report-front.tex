@@ -1,0 +1,116 @@
+% Title page
+
+%----------------------------------------------------------------------------------------
+% TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+  \newgeometry{left=1.8cm,right=1.7cm, top=1.375cm, bottom=0cm}
+  \thispagestyle{empty} % Remove page numbering on this page
+  \renewcommand{\arraystretch}{1}
+  \arrayrulecolor{black}
+  \linespread{0.9}
+  \setstretch{1.0}
+  {
+  \sffamily
+  \tabulinesep=0mm
+  % First table - headery type stuff
+  \begin{tabu} to \linewidth {Xr}
+    % Row 1 - classification & company branding
+    {\smalltitle{Security classification\#01|$rr-report.classification$}} &
+    \raisebox{1ex-\height} {\includegraphics[width=5.56cm]{RR-with-name.png}} \\
+    \multicolumn{2}{l}
+    % Row 2 - just TECHNICAL REPORT
+    {\fontsize{14pt}{14pt}\textbf{TECHNICAL REPORT}} \\
+  \end{tabu}\\
+  \vspace{5mm} \\
+  % Row 1 - Document series, number & issue
+  \begin{tabu} to \linewidth {|X|X[-1,l]|X[-1,l]|X[-1,l]|}
+    \arrayrulecolor{black}
+    \hline
+    \smalltitle{Discipline or Report series\#10|$rr-report.series$} &
+    \smalltitle{Document number\#12|$rr-report.number$} &
+    \smalltitle{Report number\#52|} &
+    \smalltitle{Issue\#13|$issue$} \\
+    \hline
+  \end{tabu} \\[-1pt]
+  % Row 2 - title box
+  \tabulinesep=0.25mm
+  \begin{tabu} to \linewidth {|X|}
+    \arrayrulecolor{black}
+    \parbox[t][15mm][t]{\textwidth}{\smalltitle{Title\#15|$title$}} \\
+    \hline
+  \end{tabu} \\[-1pt]
+  % Row 3 - author & date
+  \tabulinesep=0.25mm
+  \begin{tabu} to \linewidth {|XX[-1,l]|X[-1,l]|}
+    \arrayrulecolor{black}
+    \smalltitle{Authors\#20|$for(author)$$author$$sep$ \and $endfor$} & \smalltitle{Telephone:\#|} & \smalltitle{Date\#40|\DTMusedate{rr-front-page-date}} \\
+    \hline
+  \end{tabu} \\
+  % Row 4 - empty space
+
+  %Row 5 - summary minipage
+  \tabulinesep=0.25mm
+  \begin{tabu} to \linewidth {|X|}
+    \arrayrulecolor{black}
+    \hline
+    \begin{minipage}[t][10.85cm][t]{\linewidth-3mm}
+        \begin{spacing}{.825}
+        \setlength{\parskip}{\defaultparskip}
+        \setstretch{1}
+        \smalltitle{Summary\#60|}\vspace{-0.2\baselineskip}
+        $rr-report.summary$
+      \end{spacing}
+    \end{minipage}\\
+    \hline
+  \end{tabu} \\[-1pt]
+  % Row 6 - keywords & retention category
+  \tabulinesep=0.25mm
+  \begin{tabu} to \linewidth {|X|X[-1,l]|}
+    \arrayrulecolor{black}
+    \smalltitle{Additional keywords\#90|$rr-report.keywords$} & 
+    \smalltitle{Retention category\#|{\Huge\centering\bfseries $if(rr-report.retention-category)$$rr-report.retention-category$$else$B$endif$}} \\
+    \hline
+  \end{tabu} \\
+  % Row 7 - Circulation & approver
+  \parbox[t][3.3cm][t]{\linewidth} {
+    \begin{tabu} to \linewidth {Xp{4.69cm}}
+      \smalltitle{Circulation:\#|Technical Library, $rr-report.circulation$} & \smalltitle{Approved by:\#|} \\
+    \end{tabu}
+  }\\
+  % Row 8 - metadata
+  \begin{tabu} to \linewidth {|p{4cm}|p{5.6cm}|p{3.55cm}|p{2.9cm}|}
+    \arrayrulecolor{black}
+    \hline
+    %Row 8.1 - project, sub-system...
+    \parbox[t][0.82cm][t]{\linewidth} {\smalltitle{Project\#|}} & \smalltitle{Sub-system\#|} & \smalltitle{Process\#|} & \smalltitle{Part number\#|} \\
+    %Row 8.2 - Engine types, engine marks etc...
+    \hline
+    \parbox[t][0.82cm][t]{\linewidth} {\smalltitle{Engine types\#24|}} & \smalltitle{Engine marks/vehicle name\#|} & \smalltitle{Vehicle number/build\#28|} & \smalltitle{Module\#|} \\
+    \hline
+  \end{tabu} \\[-1pt]
+  % Row 8.3 - Material, scheme etc
+  \begin{tabu} {|p{2.55cm}|p{3cm}|p{2.1cm}|p{1.075cm}|p{1.55cm}|p{1.57cm}|p{2.9cm}|}
+    \arrayrulecolor{black}
+    \parbox[t][0.77cm][t]{\linewidth} {\smalltitle{Material\#|}} &
+    \smalltitle{Scheme\#|} & \smalltitle{Scheme issue\#|} &
+    \smalltitle{CTP\#32|} & \smalltitle{ATP\#36|} & \smalltitle{Dept\#44|} &
+    \smalltitle{File/folder\#48|} \\
+    \hline
+  \end{tabu} \\[-1pt]
+  % Row 8.4 - Classification & page number
+  \begin{tabu} to \linewidth {m{3.602cm}|m{10cm}|m{2.9cm}|@{}}
+    \arrayrulecolor{black}
+    ~ & {\centering \smalltitle{Security classification\#01|\hspace*{\fill}$rr-report.classification$\hspace*{\fill}}} &  \centering Page \thepage\ of \pageref*{LastPage} {\footnotesize\bfseries\textsuperscript{\#56}} \\
+    \tabucline{2-3}
+  \end{tabu}
+
+  % Copyright
+  \begin{spacing}{.825}
+    \bfseries\footnotesize ©\DTMfetchyear{rr-front-page-date} Rolls-Royce plc \\
+    The information in this document is the property of Rolls-Royce plc and may not be copied, or communicated to a third party, or used, for any purpose other than that for which it is supplied without the express written consent of Rolls-Royce plc.
+  \end{spacing}
+  \renewcommand{\arraystretch}{1.3}
+}
+\end{titlepage}

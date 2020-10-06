@@ -1,0 +1,38 @@
+\usepackage[en-GB]{datetime2}
+\DTMlangsetup[en-GB]{ord=raise}
+
+\usepackage{ifmtarg}
+\makeatletter
+\newcommand{\maybeline}[1]{\@ifnotmtarg{#1}{#1 \\}}
+\newcommand{\isnotempty}[1]{%
+\@ifnotmtarg{#1}{YES}}
+\newcommand{\maybeprefix}[2]{\@ifnotmtarg{#1}{#2#1}}
+\makeatother
+
+\DTMsavedate{rr-front-page-date}{$if(pubdate)$$pubdate$$else$$date$$endif$}
+
+\usepackage{xstring}
+\def\smalltitleparser #1\##2|#3\stopmark{{\footnotesize\bfseries \StrSubstitute{#1}{ }{~}\textsuperscript{\maybeprefix{#2}{\#}}}\vspace{-0.1\baselineskip} \par#3 \vspace{0.1\baselineskip} }
+\def\smalltitle#1{\smalltitleparser #1\stopmark}
+
+
+\newlength{\defaultparskip}
+\setlength{\defaultparskip}{\parskip}
+
+\usepackage{tabu}
+\usepackage{array}
+
+\usepackage{calc}
+
+\fancyhead{}
+\fancyfoot{}
+\fancyhead{}
+\fancyfoot[F]{
+  % Copyright
+  \begin{spacing}{.825}
+    \bfseries\footnotesize ©\DTMfetchyear{rr-front-page-date} Rolls-Royce plc \\
+    The information in this document is the property of Rolls-Royce plc and may not be copied, or communicated to a third party, or used, for any purpose other than that for which it is supplied without the express written consent of Rolls-Royce plc.
+  \end{spacing}
+}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
