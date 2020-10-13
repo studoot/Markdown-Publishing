@@ -72,12 +72,13 @@ done
 for file in "$@"; do
     [ -f "$file" ] || { printf "%s: Argument %s is not a valid file path\n" "$0" "$file"; continue; }
     docdir=$(dirname "$file")
+    EXTRA_OPTIONS=()
     DATE=--variable=date:$(git -C "$docdir" log -1 --date=short --format=%cd 2>/dev/null) || DATE=$(date -Idate)
-    COMMIT=--variable=commit:$(git -C "$docdir" rev-parse --short HEAD 2>/dev/null) || COMMIT=
+    COMMIT=--variable=commit:$(git -C "$docdir" rev-parse --short HEAD 2>/dev/null) && EXTRA_OPTIONS+=("${COMMIT}")
     EXTRA_DEFAULTS_FILE=${file%%.*}-defaults.yaml
-    [ -f "$EXTRA_DEFAULTS_FILE" ] && EXTRA_DEFAULTS=--defaults="$EXTRA_DEFAULTS_FILE"
+    [ -f "$EXTRA_DEFAULTS_FILE" ] && EXTRA_OPTIONS+=("--defaults=$EXTRA_DEFAULTS_FILE")
     THIS_OUTPUT=${OUTPUT:-${file%%.*}}
-    [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf $EXTRA_DEFAULTS -o "${THIS_OUTPUT}.pdf" "${DATE}" "${COMMIT}"
-    [ -n "$DO_TEX" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf $EXTRA_DEFAULTS -o "${THIS_OUTPUT}.tex" "${DATE}" "${COMMIT}"
-    [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html $EXTRA_DEFAULTS ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${COMMIT}"
+    [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.pdf" "${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
+    [ -n "$DO_TEX" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.tex" "${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
+    [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html "${EXTRA_DEFAULTS}" ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${EXTRA_OPTIONS[@]}"
 done

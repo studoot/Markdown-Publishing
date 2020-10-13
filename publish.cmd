@@ -51,9 +51,14 @@ for /f "usebackq" %%G in (`git -C "%DOCDIR%" rev-parse --short HEAD 2^>nul`) do 
 @REM Get path of input file without the extension as the output name
 set OUTPUT=%~dpn1
 
+@REM See if an input file specific defaults file exists
+if exist "%~dpn1-defaults.yaml" (
+    set EXTRA_DEFAULTS=--defaults="%~dpn1-defaults.yaml"
+)
+
 @REM Do the document conversions
-pandoc "--data-dir=%PROGDIR%" --defaults md2pdf -o "%OUTPUT%.pdf" %DOCDATE% %COMMIT% "%~1"
-pandoc "--data-dir=%PROGDIR%" --defaults md2html --self-contained -o "%OUTPUT%.html" %DOCDATE% %COMMIT% "%~1"
+pandoc "--data-dir=%PROGDIR%" --defaults md2pdf %EXTRA_DEFAULTS% -o "%OUTPUT%.tex" %DOCDATE% %COMMIT% "%~1" --wrap=none
+pandoc "--data-dir=%PROGDIR%" --defaults md2html %EXTRA_DEFAULTS% --self-contained -o "%OUTPUT%.html" %DOCDATE% %COMMIT% "%~1"
 
 @REM Try the next parameter
 :nextarg
