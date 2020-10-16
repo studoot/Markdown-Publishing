@@ -64,8 +64,11 @@
     % Row 6 - keywords & retention category
     \begin{tabularx}{\linewidth}{|X|c|}
           \smalltitle{Additional keywords}{90}{}
-
-          $for(rr-report.keyword)$$it$$sep$, $endfor$
+            
+          $if(keywords)$$for(keywords)$$keywords$$sep$, $endfor$
+          $elseif(rr-report.keyword)$$for(rr-report.keyword)$$it$$sep$, $endfor$
+          $elseif(rr-report.keywords)$$for(rr-report.keywords)$$it$$sep$, $endfor$
+          $endif$
         &
         \smalltitle{Retention category}{}{{\Huge\centering\bfseries $if(rr-report.retention-category)$$rr-report.retention-category$$else$B$endif$}} \\
         \hline
