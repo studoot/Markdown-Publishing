@@ -1,0 +1,137 @@
+\usepackage{tocloft}
+\usepackage{tabularx}
+\usepackage{calc}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{changepage}
+\usepackage{ifmtarg}
+\usepackage{sectsty}
+\usepackage[placement=top,angle=0,firstpage=true,pages=all,placement=top,nodeanchor=north west,position={0,0},scale=1,opacity=1]{background}
+\usepackage[en-GB]{datetime2}
+\DTMlangsetup[en-GB]{ord=raise}
+
+\DTMsavedate{rr-front-page-date}{$if(pubdate)$$pubdate$$else$$date$$endif$}
+
+\newlength{\defaultparskip}
+\setlength{\defaultparskip}{\parskip}
+\makeatletter
+\newcommand{\maybeprefix}[2]{\@ifnotmtarg{#1}{#2#1}}
+\newcommand{\maybesuffix}[2]{\@ifnotmtarg{#1}{#1#2}}
+\makeatother
+
+\newcommand{\ValueOr}[2]{ \normalexpandarg \exploregroups \StrLen{#1}[\mylen] \ifnum\mylen=0{#2}\else{#1}\fi}
+% mandatory-attribute:
+%    #1 : Optional pattern to use if #3 isn't empty
+%    #2 : Attribute name, used in replacement placeholder text
+%    #3 : Attribute value, which needs to be non-empty or else the placeholder is used.
+%
+%  This command tests to see if #3 is empty. If it is, a placeholder is inserted (using the value of #2). If not, #3
+\makeatletter
+\newcommand{\MandatoryAttribute}[3][]{\@ifmtarg{#3}{{\Large\bfseries\MakeUppercase{Missing #2 metadata}}}{\ValueOr{#1}{#3}}}
+\makeatother
+\newcommand{\OptionalAttribute}[1]{#1}
+
+\definecolor{RollsRoyceBlue}{HTML}{10069f}
+\definecolor{RollsRoyceFooterBackground}{HTML}{f2f2f2}
+\definecolor{RollsRoyceFrontPageTitleFont}{HTML}{7f7f7f}
+
+\newcommand{\TitleTitleSize}[1]{\fontsize{7pt}{7pt}\selectfont{#1}}
+\newcommand{\TitleSize}[1]{\fontsize{10pt}{10pt}\selectfont{#1}}
+\def\AuthorStringParser #1(#2)#3|#4\stopmark{ \ifnum1=#4\string#1 \relax\else\string#2 \relax\fi }
+\newcommand{\AuthorName}[1]{\AuthorStringParser #1\relax()|1\stopmark}
+\newcommand{\AuthorRole}[1]{\AuthorStringParser #1\relax()|2\stopmark}
+
+\newcommand{\JustSmallTitle}[1]{{\TitleTitleSize{\textcolor{RollsRoyceFrontPageTitleFont}{\maybesuffix{#1}{ :}}}}}
+
+\newcommand{\SmallTitleWidth}[2]{
+  \maxof{\widthof{\JustSmallTitle{#1}}}{\widthof{\TitleSize{#2}}}
+}
+
+\newcommand{\SmallTitle}[3][]{
+  \parbox[t]{\SmallTitleWidth{#2}{#3} + 1pt}{#1 \JustSmallTitle{#2}\par \TitleSize{#3}\vspace{0.2\baselineskip}}
+}
+
+% title                                          : 
+% author                                         : Can be a list of authors. Author roles may be provided in parentheses after the name - eg "Joe Bloggs (General Dogsbody)"
+% keywords, rr-report.keyword, rr-report.keywords: Synonyms. Can be a list of keywords. The first encountered will be used.
+% rr-report.series                               : Maps to MarkMe 'Document Type' field
+% rr-report.number                               : Maps to MarkMe 'Document ID' field
+% rr-report.legacy-number                        : Maps to MarkMe 'Alternate ID' field
+% issue                                          : Maps to MarkMe Issue/Version - will have any COMMIT variable added in
+% pubdate/date                                   : MarkMe Publication Date
+% rr-report.retention-category                   : Defaults to "B"
+% rr-report.retention-period                     : Defaults to "6 years"
+% rr-report.review-date                          : Defaults to empty
+% rr-report.approver                             : MarkMe Approver.
+% rr-report.circulation                          : Can be a list of people.
+% rr-report.summary                              : Front page text, as Markdown
+% rr-report.export-control                       : Export control statement, otherwise "Not subject to export control"
+% rr-report.sensitivity                          : Business sensitivity statement, otherwise "Not subject to export control"
+
+\newcommand{\RRDocumentID}{\MandatoryAttribute{document ID}{$rr-report.number$}}
+\newcommand{\RRIssue}{\MandatoryAttribute{issue}{$issue$}}
+\newcommand{\RRIssueAndCommit}{\RRIssue$if(commit)${\hspace*{\fill}\fontsize{6pt}{6pt}\selectfont (ID: $commit$)}$endif$}
+\newcommand{\RRTitle}{\MandatoryAttribute{title}{$title$}}
+\newcommand{\RRAuthors}{\MandatoryAttribute{authors}{$for(author)$$if(it.name)$$it.name$$if(it.role)$ ($it.role$)$endif$$else$$it$$endif$$sep$, $endfor$}}
+\newcommand{\RRKeywords}{$if(keywords)$$for(keywords)$$keywords$$sep$, $endfor$$elseif(rr-report.keyword)$$for(rr-report.keyword)$$it$$sep$, $endfor$$elseif(rr-report.keywords)$$for(rr-report.keywords)$$it$$sep$, $endfor$$endif$~}
+\newcommand{\RRRetentionCategory}{$if(rr-report.retention-category)$$rr-report.retention-category$$else$B$endif$}
+\newcommand{\RRRetentionPeriod}{$if(rr-report.retention-period)$$rr-report.retention-period$$else$6 years$endif$}
+\newcommand{\RRCirculation}{Technical Library$if(rr-report.circulation)$, $for(rr-report.circulation)$$it$$sep$, $endfor$$endif$}
+\newcommand{\RRApprover}{$if(rr-report.approver.name)$$rr-report.approver.name$$else$\AuthorName{$rr-report.approver$}$endif$}
+\newcommand{\RRApproverRole}{$if(rr-report.approver.role)$$rr-report.approver.role$$else$\AuthorRole{$rr-report.approver$}$endif$}
+\newcommand{\RRExportControl}{$if(rr-report.export-control)$$rr-report.export-control$$else$Technology for Export Control$endif$}
+\newcommand{\RRSensitivity}{$if(rr-report.sensitivity)$$rr-report.sensitivity$$else$Strictly Private$endif$}
+
+\newcommand{\RollsRoyceLongCopyright}{
+  % Copyright
+    \footnotesize ©\DTMfetchyear{rr-front-page-date} Rolls-Royce plc \\
+    The information in this document is proprietary and confidential to Rolls-Royce and is available to authorised recipients only - copying and onward distribution is prohibited other than for the purpose for which it was made available.\\
+    \RRExportControl \\
+    \RRSensitivity\\
+}
+\newcommand{\RollsRoyceShortCopyright}{
+  % Copyright
+    \footnotesize ©\DTMfetchyear{rr-front-page-date} Rolls-Royce plc \\
+    \RRExportControl \\
+    \RRSensitivity\\
+}
+\newlength{\RollsRoyceFrontPageAuthorBoxSize}
+\setlength{\RollsRoyceFrontPageAuthorBoxSize}{\totalheightof{\parbox{5cm}{\SmallTitle{Author(s)}{}\\ \TitleSize{(Ägy\\(Ägy}}}}
+\setlength\headheight{0pt} 
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\geometry{top=0.1\paperwidth, bottom=2cm, left=3cm, right=2cm, includehead=true,includefoot=true}
+
+\fancyhead{}
+\fancyfoot{}
+\fancyhfoffset{7mm}
+\addtolength{\headwidth}{2.5cm + 2.5cm - 1.7cm -1.8cm}
+\newlength\RollsRoyceFooterDocumentIDWidth
+\newlength\RollsRoyceFooterPageNumberWidth
+\newcommand{\RollsRoyceFooterDocumentID}{\SmallTitle{Document ID}{\RRDocumentID}}
+\newcommand{\RollsRoyceFooterIssue}{\SmallTitle{Issue}{\RRIssue}}
+\newcommand{\RollsRoyceFooterPageNumber}{\SmallTitle{}{Page \thepage\ of \pageref*{LastPage}}}
+\setlength\RollsRoyceFooterDocumentIDWidth{\widthof{\RollsRoyceFooterDocumentID}}
+\setlength\RollsRoyceFooterPageNumberWidth{\widthof{Page \pageref*{LastPage}\ of \pageref*{LastPage}}}
+\fancyfoot[L]{
+  \renewcommand{\arraystretch}{1}
+  \TitleSize{
+    {\centering \RollsRoyceShortCopyright}
+    \vspace{2mm}
+    \setlength\arrayrulewidth{1pt}
+    \arrayrulecolor{RollsRoyceBlue}
+    \begin{tabularx}{\linewidth}{|p{\RollsRoyceFooterDocumentIDWidth}|X|p{\RollsRoyceFooterPageNumberWidth}|}
+      \hline
+      \rowcolor{RollsRoyceFooterBackground}
+      \RollsRoyceFooterDocumentID & \RollsRoyceFooterIssue & \RollsRoyceFooterPageNumber \\
+      \hline
+    \end{tabularx}
+  }
+}
+
+\sectionfont{\color{RollsRoyceBlue}}
+\subsectionfont{\color{RollsRoyceBlue}}
+\renewcommand{\cftsecfont}{\color{RollsRoyceBlue}}
+\renewcommand{\cftsubsecfont}{\color{RollsRoyceBlue}}
+% Ensure TOC page shows our footer
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{fancy}}} 

@@ -850,7 +850,11 @@ $endif$
 %% end added
 %%
 $if(rr-report)$
+$if(rr-report.version2)$
+${ rr-report-preamble-v2() }
+$else$
 ${ rr-report-preamble() }
+$endif$
 $endif$
 
 \begin{document}
@@ -861,7 +865,11 @@ $endif$
 $if(beamer)$
 $else$
 $if(rr-report)$
+$if(rr-report.version2)$
+${ rr-report-front-v2() }
+$else$
 ${ rr-report-front() }
+$endif$
 $elseif(titlepage)$
 \begin{titlepage}
 $if(titlepage-background)$

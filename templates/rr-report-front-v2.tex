@@ -1,0 +1,93 @@
+% Title page
+
+%----------------------------------------------------------------------------------------
+% TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\backgroundsetup{
+  placement=top,
+  nodeanchor=north west,
+  contents={\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{RR-v2-front-header.png}} 
+}
+
+\begin{titlepage}
+  \thispagestyle{empty} % Remove page numbering on this page
+  \renewcommand{\arraystretch}{1}
+  \arrayrulecolor{black}
+  \linespread{0.9}
+  \setstretch{1.0}
+  \begin{adjustwidth}{-0.75cm}{-0.75cm}
+  \TitleSize{
+    \vspace*{1cm}
+    \enlargethispage{3cm}
+    % First table - headery type stuff
+    \begin{tabularx}{\linewidth}{|X|p{5cm}|}
+      \hline
+      % Row 1 - document ID & version
+      \SmallTitle{Document ID}{\RRDocumentID} &
+      \SmallTitle{Issue}{\parbox{5cm}{\RRIssueAndCommit}} \\
+      \hline
+      % Row 2 - title
+      \multicolumn{2}{|X|}{\SmallTitle{Title}{\RRTitle}} \\
+      \hline
+      % Row 3 - authors
+      \multicolumn{2}{|X|}{
+        % These seem to be the characters that reach the highs and lows of character sizes, so measure them...
+        \parbox[t][\RollsRoyceFrontPageAuthorBoxSize]{\textwidth}{\SmallTitle{Author(s)}{}\\ \TitleSize{\RRAuthors}}
+      } \\
+      \hline
+    \end{tabularx}
+
+    \begin{tabularx}{\linewidth}{|X|X|X|X|}
+      \hline
+      \multicolumn{4}{|X|}{
+        \begin{minipage}[t][10cm][t]{\textwidth+5mm}
+          \begin{spacing}{1}
+            \setlength{\parskip}{\defaultparskip}
+            \SmallTitle{Summary}{}\\
+            $rr-report.summary$
+          \end{spacing}
+        \end{minipage}
+      } \\
+      \hline
+      \multicolumn{4}{|X|}{\parbox[t][\totalheightof{\SmallTitle{Keywords}{Keywords}}][t]{\textwidth}{\SmallTitle{Keywords}{\RRKeywords}}} \\
+      \hline
+      \multicolumn{2}{|X|}{\SmallTitle{Document or Record Type}{$rr-report.series$}} &
+      \multicolumn{2}{X|}{\SmallTitle{Alternate ID}{$rr-report.legacy-number$}} \\
+      \hline
+      \SmallTitle{Publication Date}{\DTMusedate{rr-front-page-date}} &
+      \SmallTitle{Retention Category}{\RRRetentionCategory} &
+      \SmallTitle{Retention Period}{\RRRetentionPeriod} &
+      \SmallTitle{Review Date}{} \\
+      \hline
+    \end{tabularx}
+    \begin{tabularx}{\linewidth}{XX}
+      \parbox[t][6cm]{\linewidth}{\SmallTitle{Circulation}{}\\ \RRCirculation} &
+      \parbox[t][6cm]{\linewidth}{
+        \SmallTitle{Approved By}{}\\
+        \vspace{1.5cm}\\
+        \hspace{5mm}\rule{\linewidth-10mm}{1pt}\\
+        \vspace{1cm}\\
+        \RRApprover\\
+        \RRApproverRole
+      } \\
+    \end{tabularx}
+    \vspace{1cm}\\
+    % \begin{minipage}[t][5cm][b]{\textwidth+5mm}
+    {\centering \RollsRoyceLongCopyright}
+    % \end{minipage}
+    \renewcommand{\arraystretch}{1.3}
+  }
+  \end{adjustwidth}
+\end{titlepage}
+\newpage
+\pagestyle{fancy}
+\backgroundsetup{
+  angle=0,
+  pages=all,
+  placement=top,
+  nodeanchor=north west,
+  scale=1,
+  opacity=1,
+  contents={\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{RR-v2-other-header.png}} 
+}
