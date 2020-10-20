@@ -97,6 +97,7 @@ This script also recognises a number of command-line options that can be used to
 | `-t`, `--tex`        | Output TeX source code.                                                                                     |
 | `-q`, `--quick-html` | Keep external links in output HTML. By default, these are resolved to resources contained in the HTML file. |
 | `-o`, `--output`     | Specify output file's basename - the appropriate extension will be added.                                   |
+| `-v`, `--verbose`    | Show conversion logs                                                                                        |
 | --help               | Display usage message.                                                                                      |
 
 By default, HTML and PDF output is produced. Selecting any of the output
