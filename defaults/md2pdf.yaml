@@ -27,6 +27,7 @@ variables:
   titlepage-text-color: "10069F" # rolls-royce-blue
   titlepage-rule-color: "10069F" # rolls-royce-blue
   logo: "RR.eps"
+  titlepage-logo: "RR.eps"
   logo-width: "30"
   code-block-font-size: "\\footnotesize"
   lang: "en-GB"
@@ -38,3 +39,4 @@ variables:
   header-includes: |
     \usepackage{enumitem}
     \setlist[description]{style=nextline}
+    \usepackage{lastpage}

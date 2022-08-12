@@ -97,15 +97,8 @@
 }
 \newlength{\RollsRoyceFrontPageAuthorBoxSize}
 \setlength{\RollsRoyceFrontPageAuthorBoxSize}{\totalheightof{\parbox{5cm}{\SmallTitle{Author(s)}{}\\ \TitleSize{(Ägy\\(Ägy}}}}
-\setlength\headheight{0pt} 
-\renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
 \geometry{top=0.1\paperwidth, bottom=2cm, left=3cm, right=2cm, includehead=true,includefoot=true}
 
-\fancyhead{}
-\fancyfoot{}
-\fancyhfoffset{7mm}
-\addtolength{\headwidth}{2.5cm + 2.5cm - 1.7cm -1.8cm}
 \newlength\RollsRoyceFooterDocumentIDWidth
 \newlength\RollsRoyceFooterPageNumberWidth
 \newcommand{\RollsRoyceFooterDocumentID}{\SmallTitle{Document ID}{\RRDocumentID}}
@@ -113,25 +106,30 @@
 \newcommand{\RollsRoyceFooterPageNumber}{\SmallTitle{}{Page \thepage\ of \pageref*{LastPage}}}
 \setlength\RollsRoyceFooterDocumentIDWidth{\widthof{\RollsRoyceFooterDocumentID}}
 \setlength\RollsRoyceFooterPageNumberWidth{\widthof{Page \pageref*{LastPage}\ of \pageref*{LastPage}}}
-\fancyfoot[L]{
-  \renewcommand{\arraystretch}{1}
-  \TitleSize{
-    {\centering \RollsRoyceShortCopyright}
-    \vspace{2mm}
-    \setlength\arrayrulewidth{1pt}
-    \arrayrulecolor{RollsRoyceBlue}
-    \begin{tabularx}{\linewidth}{|p{\RollsRoyceFooterDocumentIDWidth}|X|p{\RollsRoyceFooterPageNumberWidth}|}
-      \hline
-      \rowcolor{RollsRoyceFooterBackground}
-      \RollsRoyceFooterDocumentID & \RollsRoyceFooterIssue & \RollsRoyceFooterPageNumber \\
-      \hline
-    \end{tabularx}
+\newpairofpagestyles{rr-report-header-footer}{
+  \clearpairofpagestyles
+  \cfoot*{
+    \renewcommand{\arraystretch}{1}
+    \TitleSize{
+      {\centering \RollsRoyceShortCopyright}
+      \vspace{2mm}
+      \setlength\arrayrulewidth{1pt}
+      \arrayrulecolor{RollsRoyceBlue}
+      \begin{tabularx}{\linewidth}{|p{\RollsRoyceFooterDocumentIDWidth}|X|p{\RollsRoyceFooterPageNumberWidth}|}
+        \hline
+        \rowcolor{RollsRoyceFooterBackground}
+        \RollsRoyceFooterDocumentID & \RollsRoyceFooterIssue & \RollsRoyceFooterPageNumber \\
+        \hline
+      \end{tabularx}
+    }
   }
+  \addtokomafont{pageheadfoot}{\upshape}
 }
+\pagestyle{rr-report-header-footer}
 
 \sectionfont{\color{RollsRoyceBlue}}
 \subsectionfont{\color{RollsRoyceBlue}}
 \renewcommand{\cftsecfont}{\color{RollsRoyceBlue}}
 \renewcommand{\cftsubsecfont}{\color{RollsRoyceBlue}}
 % Ensure TOC page shows our footer
-\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{fancy}}} 
+\AtBeginDocument{\addtocontents{toc}{\protect\thispagestyle{rr-report-header-footer}}} 
