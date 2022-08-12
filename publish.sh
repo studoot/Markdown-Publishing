@@ -1,7 +1,8 @@
 #!  /bin/bash
 
-PROGDIR=$(dirname "$0")
+PROGDIR=$(realpath -e "$(dirname "$0")")
 PROGRAM=$(basename "$0")
+PANDOC=${PANDOC:-$(command -v pandoc)}
 usage() {
     cat <<EOT
     Usage: $PROGRAM OPTIONS [MARKDOWN FILE]...
@@ -9,7 +10,6 @@ usage() {
         -h|--html           Make HTML
         -p|--pdf            Make PDF
         -t|--tex            Make TeX source code
-        -q|--quick-html     Don't make self-contained HTML
         -o|--output         Specify output file's basename - an extension will be added
         -v|--verbose        Show conversion logs
         --help              Display this message
@@ -20,7 +20,7 @@ EOT
     exit 1
 }
 
-OPTIONS=$(getopt -n "$0" -o hptqo:v --long html,pdf,tex,quick-html,output,verbose:,help -- "$@")
+OPTIONS=$(getopt -n "$0" -o hpto:v --long html,pdf,tex,output,verbose:,help -- "$@")
 # shellcheck disable=SC2181
 [[ $? -ne 0 ]] && usage
 
@@ -32,9 +32,6 @@ while true; do
         -h | --html)
             DO_HTML=YES
             DO_ALL=
-            ;;
-        -q | --quick-html)
-            DO_QUICK_HTML=YES
             ;;
         -p | --pdf)
             DO_PDF=YES
@@ -71,19 +68,28 @@ done
 [ -n "$OUTPUT" ] && [ $# -gt 1 ] && { printf "%s: --output can only be used when 1 Markdown file is supplied\n" "$0"; usage; exit 1; }
 [ -n "$DO_ALL" ] && { DO_HTML=YES; DO_PDF=YES; }
 # shellcheck disable=SC2015
-[ -n "$DO_QUICK_HTML" ] && { DO_HTML=YES; } || { SELF_CONTAINED=--self-contained; }
 
 for file in "$@"; do
     [ -f "$file" ] || { printf "%s: Argument %s is not a valid file path\n" "$0" "$file"; continue; }
+    docname=$(basename "$file")
     docdir=$(dirname "$file")
     EXTRA_OPTIONS=()
-    DATE=--variable=date:$(git -C "$docdir" log -1 --date=short --format=%cd 2>/dev/null) || DATE=--variable=date:$(date -Idate)
-    COMMIT=--variable=commit:$(git -C "$docdir" rev-parse --short HEAD 2>/dev/null) && EXTRA_OPTIONS+=("${COMMIT}")
+	STATUS=$(git -C "$docdir" status --porcelain -- "$docname" 2>/dev/null)
+	DATE=$(git -C "$docdir" log -n 1 --pretty=%cd --date=short -- "$docname" 2>/dev/null)
+	if [ -z "$DATE" ] || [ -n "$STATUS" ]; then DATE=$(date -r "$(realpath -e "$file")" --iso-8601); fi
+	COMMIT=$(git -C "$docdir" log -n 1 --pretty=%h --date=short -- "$docname" 2>/dev/null)
+	if [ -n "$STATUS" ] && [ -n "$STATUS" ]; then COMMIT="${COMMIT} + modifications"; fi
+    if [ -n "$COMMIT" ]; then EXTRA_OPTIONS+=("--variable=commit:${COMMIT}"); fi
+
     [ -n "$DO_VERBOSE" ] && EXTRA_OPTIONS+=("--verbose")
     EXTRA_DEFAULTS_FILE=${file%.*}-defaults.yaml
     [ -f "$EXTRA_DEFAULTS_FILE" ] && EXTRA_OPTIONS+=("--defaults=$EXTRA_DEFAULTS_FILE")
-    THIS_OUTPUT=${OUTPUT:-${file%.*}}
-    [ -n "$DO_PDF" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.pdf" "${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
-    [ -n "$DO_TEX" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" "TEXINPUTS=.:${PROGDIR}//:" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.tex" "${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
-    [ -n "$DO_HTML" ] && env "PLANTUML=${PROGDIR}/filters/plantuml.jar" pandoc "${file}" "--data-dir=${PROGDIR}" --defaults md2html ${SELF_CONTAINED} -o "${THIS_OUTPUT}.html" "${DATE}" "${EXTRA_OPTIONS[@]}"
+    THIS_OUTPUT=$(realpath -m "${OUTPUT:-${file%.*}}")
+    [ -n "$DO_PDF" ] && env "TEXINPUTS=.:${PROGDIR}//:" "${PANDOC}" "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.pdf" "--metadata=plantuml_path:${PROGDIR}/filters/plantuml.jar" "--variable=date:${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
+    [ -n "$DO_TEX" ] && env "TEXINPUTS=.:${PROGDIR}//:" "${PANDOC}" "${file}" "--data-dir=${PROGDIR}" --defaults md2pdf  -o "${THIS_OUTPUT}.tex" "--metadata=plantuml_path:${PROGDIR}/filters/plantuml.jar" "--variable=date:${DATE}" "${EXTRA_OPTIONS[@]}" "--wrap=none"
+    [ -n "$DO_HTML" ] && (
+        cd "$docdir" || exit
+        EXTRACT_DIR=$(mktemp --directory --tmpdir=.)
+        "${PANDOC}" --fail-if-warnings "${docname}" "--data-dir=${PROGDIR}" --standalone --self-contained --defaults md2html --extract-media "$EXTRACT_DIR" -o "${THIS_OUTPUT}.html" "--metadata=plantuml_path:${PROGDIR}/filters/plantuml.jar" "--variable=date:${DATE}" "${EXTRA_OPTIONS[@]}";
+    )
 done

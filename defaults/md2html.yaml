@@ -1,9 +1,14 @@
-from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes
+from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes+inline_code_attributes
 
 to: html5
 standalone: true
-# self-contained: true
-template: easy_template.html
+self-contained: true
+template: html_template.html
+resource-path:
+- ${.}/../templates
+- ${.}/../templates/html-resources
+- ${.}/../images
+
 toc: true
 filters:
 - diagram-generator.lua

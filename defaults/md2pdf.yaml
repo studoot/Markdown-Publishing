@@ -1,9 +1,9 @@
-from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes+raw_tex
+from: markdown+smart+auto_identifiers+ascii_identifiers+backtick_code_blocks+fenced_code_attributes+definition_lists+raw_attribute+header_attributes+raw_tex+raw_html
 
 pdf-engine: xelatex
 standalone: true
 number-sections: true
-template: eisvogel.tex
+template: md2pdf.tex
 
 listings: true
 
