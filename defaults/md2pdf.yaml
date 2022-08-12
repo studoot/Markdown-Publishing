@@ -4,6 +4,10 @@ pdf-engine: xelatex
 standalone: true
 number-sections: true
 template: md2pdf.tex
+resource-path:
+- ${.}/../templates
+- ${.}/../templates/tex-resources
+- ${.}/../images
 
 listings: true
 
@@ -22,15 +26,15 @@ variables:
   titlepage: "true"
   titlepage-text-color: "10069F" # rolls-royce-blue
   titlepage-rule-color: "10069F" # rolls-royce-blue
-  logo: "RR.png"
+  logo: "RR.eps"
   logo-width: "30"
   code-block-font-size: "\\footnotesize"
   lang: "en-GB"
   linestretch: "1.1"
-  # geometry:
-  #   - a4paper
-  #   - text={16.5cm,23cm}
-  #   - centering
+  geometry:
+    - a4paper
+    - text={16.5cm,23cm}
+    - centering
   header-includes: |
     \usepackage{enumitem}
     \setlist[description]{style=nextline}
