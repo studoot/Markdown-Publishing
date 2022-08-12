@@ -10,14 +10,14 @@ A clean **pandoc LaTeX template** to convert your markdown files to PDF or LaTeX
 
 | A custom title page  | A basic example page |
 | :------------------: | :------------------: |
-| [![A custom title page](examples/title-page-custom/preview.png)](examples/title-page-custom/document.pdf) | [![A basic example page](examples/basic-example/preview.png)](examples/basic-example/document.pdf) |
+| [![A custom title page](../examples/custom-titlepage/custom-titlepage.png)](../examples/custom-titlepage/custom-titlepage.pdf) | [![A basic example page](../examples/basic-example/basic-example.png)](../examples/basic-example/basic-example.pdf) |
 
 ## Installation
 
 1.  Install pandoc from <http://pandoc.org/>. You also need to install [LaTeX](https://en.wikibooks.org/wiki/LaTeX/Installation#Distributions).
 2.  Download the latest version of the Eisvogel template from [the release page](https://github.com/Wandmalfarbe/pandoc-latex-template/releases/latest).
 3.  Extract the downloaded ZIP archive and open the folder.
-4.  Move the template `eisvogel.latex` to your pandoc templates folder. The location of the templates folder depends on your operating system:
+4.  Move the template `eisvogel.tex` to your pandoc templates folder and rename the file to `eisvogel.latex`. The location of the templates folder depends on your operating system:
       - Unix, Linux, macOS: `/Users/USERNAME/.local/share/pandoc/templates/` or `/Users/USERNAME/.pandoc/templates/`
       - Windows Vista or later: `C:\Users\USERNAME\AppData\Roaming\pandoc\templates\`
 
@@ -35,7 +35,7 @@ A clean **pandoc LaTeX template** to convert your markdown files to PDF or LaTeX
 
     where `example.md` is the markdown file you want to convert to PDF.
 
-In order to have nice headers and footers you need to supply metadata to your document. You can do that with a [YAML metadata block](http://pandoc.org/MANUAL.html#extension-yaml_metadata_block) at the top of your markdown document (see the [example markdown file](examples/basic-example/document.md)). Your markdown document may look like the following:
+In order to have nice headers and footers you need to supply metadata to your document. You can do that with a [YAML metadata block](http://pandoc.org/MANUAL.html#extension-yaml_metadata_block) at the top of your markdown document (see the [example markdown file](../examples/basic-example/basic-example.md)). Your markdown document may look like the following:
 
 ``` markdown
 ---
@@ -71,10 +71,6 @@ This template defines some new variables to control the appearance of the result
   - `titlepage-rule-height` (defaults to `4`)
 
     the height of the rule on the top of the title page (in points)
-
-  - `titlepage-logo`
-
-    path to an image that will be displayed on the title page. The path is always relative to where pandoc is executed. The option `--resource-path` has no effect.
 
   - `titlepage-background`
 
@@ -144,24 +140,13 @@ This template defines some new variables to control the appearance of the result
 
     typeset as book
 
-  - `logo-width` (defaults to `35mm`)
+  - `logo`
 
-    the width of the logo. One needs to specify the width with a (TeX) unit e.g. `100pt` or `35mm`. The following units can be used:
+    path to an image that will be displayed on the title page. The path is always relative to where pandoc is executed. The option `--resource-path` has no effect.
 
-    - `pt`: Point
-    - `pc`: pica (12 `pt`)
-    - `in`: inch (72.27 `pt`)
-    - `bp`: Big point (72 `bp` = 1 `in`)
-    - `cm`: Centimeter
-    - `mm`: Millimeter
-    - `dd`: Didot point
-    - `cc`: cicero (12 `dd`)
-    - `sp`: Scaled point (65,536 `sp` = 1 `pt`)
-    - `ex`: Nomimal x-height
-    - `em`: Nominal m-width
-    - `px`: Pixel (only for pdfTeX and LuaTeX) The dimension given to the `\pdfpxdimen` primitive; default value is 1 `bp`, corresponding to a pixel density of 72 dpi.
+  - `logo-width` (defaults to `100`)
 
-    A visual overview of the length units is available at <https://github.com/tweh/tex-units>.
+    the width of the logo (in points)
 
   - `first-chapter` (defaults to `1`)
 
@@ -319,26 +304,26 @@ There will be one blank page before each chapter because the template is two-sid
 
 | A green title page | A background image on the title page |
 | :----------------: | :----------------: |
-| [![A green title page](examples/title-page-green/preview.png)](examples/title-page-green/document.pdf) | [![A background image on the title page](examples/title-page-background/preview.png)](examples/title-page-background/document.pdf) |
+| [![A green title page](../examples/green-titlepage/green-titlepage.png)](../examples/green-titlepage/green-titlepage.pdf) | [![A background image on the title page](../examples/titlepage-background/titlepage-background.png)](../examples/titlepage-background/titlepage-background.pdf) |
 
 | images and tables | Code blocks styled without listings |
 | :---------------: | :---------------: |
-| [![images and tables](examples/images-and-tables/preview.png)](examples/images-and-tables/document.pdf) | [![Code blocks styled without listings](examples/code-blocks-without-listings/preview.png)](examples/code-blocks-without-listings/document.pdf) |
+| [![images and tables](../examples/images-and-tables/images-and-tables.png)](../examples/images-and-tables/images-and-tables.pdf) | [![Code blocks styled without listings](../examples/without-listings/without-listings.png)](../examples/without-listings/without-listings.pdf) |
 
 | A book | Code blocks styled with listings |
 | :----: | :----: |
-| [![A book](examples/book/preview.png)](examples/book/document.pdf) | [![Code blocks styled with listings](examples/code-blocks-listings/preview.png)](examples/code-blocks-listings/document.pdf) |
+| [![A book](../examples/book/book.png)](../examples/book/book.pdf) | [![Code blocks styled with listings](../examples/listings/listings.png)](../examples/listings/listings.pdf) |
 
 | A background images on all pages | CJK Support (when using XeLaTeX) |
 | :----: | :----: |
-| [![A background images on all pages](examples/page-background/preview.png)](examples/page-background/document.pdf) | [![CJK Support (when using XeLaTeX)](examples/language-japanese/preview.png)](examples/language-japanese/document.pdf) |
+| [![A background images on all pages](../examples/page-background/page-background.png)](../examples/page-background/page-background.pdf) | [![CJK Support (when using XeLaTeX)](../examples/japanese/japanese.png)](../examples/japanese/japanese.pdf) |
 
 ## Common Errors / Issues
 
 The following section lists common errors and their solutions when using the
 Eisvogel template.
 
-### LaTeX Errors `Missing endcsname inserted` or `File x not found` when using `titlepage-background`, `logo`, or `titlepage-logo`.
+### LaTeX Errors `Missing endcsname inserted` or `File x not found` when using `titlepage-background` or `logo`
 
 ``` latex
 Error producing PDF.
