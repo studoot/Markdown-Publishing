@@ -944,8 +944,7 @@ $-- ========================================
 $if(titlepage-logo)$
 \noindent
 \includegraphics[width=$if(logo-width)$$logo-width$pt$else$35mm$endif$]{$titlepage-logo$}
-$endif$
-$if(logo)$
+$elseif(logo)$
 \noindent
 \includegraphics[width=$if(logo-width)$$logo-width$$else$100$endif$pt]{$logo$}
 $endif$
