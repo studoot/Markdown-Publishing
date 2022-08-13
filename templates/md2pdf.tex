@@ -142,12 +142,17 @@ $if(fontfamily)$
 $else$
 \usepackage{lmodern}
 $endif$
-$if(linestretch)$
+$-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Original <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+$-- $if(linestretch)$
+$-- \usepackage{setspace}
+$-- $else$
+$-- \usepackage{setspace}
+$-- \setstretch{1.2}
+$-- $endif$
+$-- ========================================
 \usepackage{setspace}
-$else$
-\usepackage{setspace}
-\setstretch{1.2}
-$endif$
+\setstretch{$if(linestretch)$ $linestretch$ $else$ 1.2 $endif$ }
+$-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SRD Change >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[$if(fontenc)$$fontenc$$else$T1$endif$]{fontenc}
